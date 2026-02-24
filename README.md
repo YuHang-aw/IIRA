@@ -28,9 +28,7 @@ Instead of explaining a black-box after the fact, the agent **acts**: it maintai
 - [6. Training](#6-training)
   - [6.1 Train KBCS head](#61-train-kbcs-head)
   - [6.2 RL alignment (CISPO-style)](#62-rl-alignment-cispo-style)
-- [7. Releasing to GitHub](#7-releasing-to-github)
-- [8. Troubleshooting](#8-troubleshooting)
-- [9. Citation](#9-citation)
+- [7. Citation](#7-citation)
 
 ---
 
@@ -249,76 +247,7 @@ Typical workflow:
 
 ---
 
-## 7. Releasing to GitHub
-
-### 7.1 Create a new GitHub repo (web)
-1. Go to GitHub → **New repository**
-2. Name it (e.g., `IIRA`)
-3. Keep it empty (no README) if you want to push this folder as-is.
-
-### 7.2 Initialize & push (local)
-From the project root (`IIRA_github/`):
-
-```bash
-git init
-git add .
-git commit -m "Initial commit: IIRA code release"
-
-# add your remote (replace URL)
-git remote add origin https://github.com/<USER>/<REPO>.git
-
-# push
-git branch -M main
-git push -u origin main
-```
-
-### 7.3 Recommended `.gitignore`
-Do **not** commit datasets / artifacts / checkpoints:
-```gitignore
-# data & artifacts
-artifacts/
-**/*.ckpt
-**/*.pt
-**/*.bin
-**/*.safetensors
-**/*.jsonl
-
-# cache
-__pycache__/
-*.pyc
-.venv/
-```
-
-### 7.4 Git LFS (optional)
-If you want to store large binaries (e.g., `main.pdf` or checkpoints) in GitHub, use Git LFS:
-```bash
-git lfs install
-git lfs track "*.pdf" "*.safetensors" "*.bin"
-git add .gitattributes
-git commit -m "Enable Git LFS"
-```
-
----
-
-## 8. Troubleshooting
-
-- **“找不到 release 目录”** in `run_core.sh`  
-  Check `configs/pipeline.yaml` → `PIPELINE.RELEASE_DIR`, or confirm `artifacts/releases/*` exists.
-
-- **No adopted samples in interventional eval**  
-  Try lowering thresholds:
-  - `ADOPT_EPS=0.005` or `0.0`
-  - `MARGIN_THR=0.0`
-  - `FALLBACK_FULL_ROI=1`
-
-- **KBCS-Mix degrades performance**  
-  Ensure evidence calibration is enabled:
-  - add `--calibrate_tool`
-  - verify your per-concept profile under `configs/calib_kbcs.json` / generated profiles
-
----
-
-## 9. Citation
+## 7. Citation
 
 If you use this codebase, please cite the corresponding paper (to be filled):
 ```bibtex
