@@ -32,7 +32,6 @@ Instead of explaining a black-box after the fact, the agent **acts**: it maintai
   - [6.1 Train KBCS head](#61-train-kbcs-head)
   - [6.2 RL alignment (CISPO-style)](#62-rl-alignment-cispo-style)
 - [7. Citation](#7-citation)
-- [8. License](#8-license)
 ---
 
 ## 1. Repository Layout
