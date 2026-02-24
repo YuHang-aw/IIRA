@@ -1,0 +1,20 @@
+{
+  "version": "v1.1.0",
+  "global": {
+    "policy": "margin_band",     
+    "nms_iou": 0.3,
+    "max_rois": 1,
+    "min_box_size": 16,
+    "default_thr_pos": 0.10,
+    "default_thr_neg": -0.40,
+    "abstain_band": 0.10           
+  },
+  "view_adjustments": {
+    "supine": { "thr_pos_delta": -0.05, "thr_neg_delta": 0.00 },
+    "AP":     { "thr_pos_delta":  0.00, "thr_neg_delta": 0.00 }
+  },
+  "concepts": {
+    "pneumothorax": { "thr_pos": 0.20, "thr_neg": -0.60 },
+    "cardiomegaly": { "thr_pos": 0.05, "thr_neg": -0.30 }
+  }
+}

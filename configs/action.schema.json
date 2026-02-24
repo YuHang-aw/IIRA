@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://xai-med-vlm/action.schema.json",
+  "title": "ActionSchema",
+  "type": "object",
+  "oneOf": [
+    {
+      "title": "CLAIM",
+      "type": "object",
+      "required": ["action", "concept", "polarity"],
+      "properties": {
+        "action": { "const": "CLAIM" },
+        "concept": { "type": "string", "minLength": 1 },
+        "polarity": { "enum": ["present", "absent", "uncertain"] },
+        "rationale": { "type": "string" },
+        "step_id": { "type": "string" },
+        "timestamp": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    {
+      "title": "CHECK",
+      "type": "object",
+      "required": ["action", "concept", "p", "margin"],
+      "properties": {
+        "action": { "const": "CHECK" },
+        "concept": { "type": "string", "minLength": 1 },
+        "p": { "type": "number", "minimum": 0, "maximum": 1 },
+        "margin": { "type": "number" },
+        "roi": {
+          "anyOf": [
+            { "type": "null" },
+            {
+              "type": "array",
+              "items": { "type": "number" },
+              "minItems": 4, "maxItems": 4,
+              "description": "[x,y,w,h]"
+            }
+          ]
+        },
+        "thr_pos": { "type": "number" },
+        "thr_neg": { "type": "number" },
+        "decision": { "enum": ["support", "refute", "uncertain"] },
+        "tool": { "type": "string" },
+        "step_id": { "type": "string" },
+        "timestamp": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    {
+      "title": "ABSTAIN",
+      "type": "object",
+      "required": ["action"],
+      "properties": {
+        "action": { "const": "ABSTAIN" },
+        "reason": { "type": "string" },
+        "step_id": { "type": "string" },
+        "timestamp": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    {
+      "title": "STOP",
+      "type": "object",
+      "required": ["action"],
+      "properties": {
+        "action": { "const": "STOP" },
+        "step_id": { "type": "string" },
+        "timestamp": { "type": "string" }
+      },
+      "additionalProperties": false
+    }
+  ]
+}

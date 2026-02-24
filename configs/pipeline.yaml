@@ -1,0 +1,9 @@
+PIPELINE:
+  CHECK_BACKEND: "kbcs"        # 可选: "kbcs" | "qwen_vl"
+  ENABLE_CALIB: true
+  ENABLE_GATE:  true
+  ENABLE_PER_EXAMPLE_LOG: true
+  RELEASE_DIR: "artifacts/releases"
+
+CALIB_FILE: "configs/calib_kbcs.json"   # (T,b) 存放处
+GATE: { tau: 0.05, gamma: 0.5, lambda: 0.0 }  # 门控默认，可被fit脚本覆盖

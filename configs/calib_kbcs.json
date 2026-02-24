@@ -1,0 +1,34 @@
+{
+  "default": {
+    "T": 1.8,
+    "b": 0.0,
+    "tau": 0.12,
+    "gamma": 0.2,
+    "eta": 0.5
+  },
+  "pneumothorax": {
+    "T": 1.8,
+    "b": 0.5
+  },
+  "cardiomegaly": {
+    "T": 1.8,
+    "b": 0.5
+  },
+  "pleural effusion": {
+    "T": 1.8,
+    "b": 0.5
+  },
+  "consolidation": {
+    "T": 1.8,
+    "b": 0.5
+  },
+  "atelectasis": {
+    "T": 1.8,
+    "b": 0.5
+  },
+  "pneumonia": {
+    "T": 1.8,
+    "b": 0.5,
+    "tau": 0.15
+  }
+}

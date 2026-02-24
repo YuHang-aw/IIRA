@@ -1,0 +1,29 @@
+{
+  "version": "v1.1.0",
+  "method": "temperature",             
+  "global": { "T": 1.10 },
+  "by_view": {                        
+    "PA": { "T": 1.00 },
+    "AP": { "T": 1.15 },
+    "supine": { "T": 1.20 }
+  },
+  "concepts": {
+    "pneumothorax": { "T": 1.05 },
+    "cardiomegaly": { "T": 1.20 }
+  },
+  "sites": {                           
+    "HOSP_A": { "T": 1.12 },
+    "HOSP_B": { "T": 1.08 }
+  },
+  "fit_meta": {
+    "n_samples": 0,
+    "updated_at": "1970-01-01T00:00:00Z",
+    "method_detail": "per-concept temperature; backoff order: concept→view→site→global"
+  },
+  "isotonic_tables": {                   
+    "pneumothorax": {
+      "knots": [-4,-3,-2,-1,0,1,2,3,4],
+      "probs": [0.01,0.03,0.08,0.20,0.5,0.75,0.90,0.97,0.99]
+    }
+  }
+}

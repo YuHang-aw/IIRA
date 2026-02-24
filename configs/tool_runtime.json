@@ -1,0 +1,64 @@
+{
+  "tool": {
+    "detector_backend": "xrv_gradcam",
+    "device": "cpu",
+    "ckpt_path": "",
+    "external_calib": true,
+    "image": { "short_edge": 384 },
+    "params": {
+      "stride": 1,
+      "nms": 0.3,
+      "topk": 3,
+      "anchor": 64,
+      "min_box_size": 16,
+      "score_thr": 0.05
+    },
+    "kbcs": {
+      "use_memory": "readonly",
+      "use_backend_prob": false,
+      "use_backend_threshold": false,
+      "temperature_override": null,
+      "max_rois": 24,
+      "grid_min_side": 128,
+      "crop_side": 384
+    },
+    "memory": {
+      "path": "artifacts/memory/memory.jsonl",
+      "hash": null
+    },
+    "version": "xrv_gradcam_cpu_v1"
+  }
+}
+
+
+// {
+//   "tool": {
+//     "detector_backend": "heatmap_head",
+//     "device": "cuda",
+//     "ckpt_path": "artifacts/detectors/heatmap_head_v1/ckpt.pt",
+//     "external_calib": true,
+//     "image": { "short_edge": 384 },
+//     "params": {
+//       "stride": 16,
+//       "nms": 0.3,
+//       "topk": 3,
+//       "anchor": 64,
+//       "min_box_size": 16,
+//       "score_thr": 0.05
+//     },
+//     "kbcs": {
+//       "use_memory": "readonly",
+//       "use_backend_prob": false,
+//       "use_backend_threshold": false,
+//       "temperature_override": null,
+//       "max_rois": 24,
+//       "grid_min_side": 128,
+//       "crop_side": 384
+//     },
+//     "memory": {
+//       "path": "artifacts/memory/memory.jsonl",
+//       "hash": null
+//     },
+//     "version": "heatmap_head_v1"
+//   }
+// }
