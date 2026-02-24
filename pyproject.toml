@@ -1,0 +1,7 @@
+[project]
+name = "xai-med-vlm"
+version = "0.1.0"
+description = "SEAL-style inner loop + lightweight RL outer loop for explainable medical VLM"
+authors = [{ name="Your Team" }]
+requires-python = ">=3.10"
+dependencies = []
