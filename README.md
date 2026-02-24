@@ -1,7 +1,10 @@
 # IIRA: Interactive Image Reasoning Agent for Causally-Verifiable Calibration (Chest X-ray)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
+[![PyTorch](https://img.shields.io/badge/PyTorch-2.2+-ee4c2c.svg)](https://pytorch.org/)
 
 <p align="center">
-  <img src="main.pdf" alt="Overview figure" width="820"/>
+  <img src="main_01.png" alt="Overview figure" width="820"/>
 </p>
 
 **IIRA** turns medical VLM calibration from a *post-hoc mathematical rescaling* problem into an *auditable, action-based* reasoning process.
@@ -29,7 +32,7 @@ Instead of explaining a black-box after the fact, the agent **acts**: it maintai
   - [6.1 Train KBCS head](#61-train-kbcs-head)
   - [6.2 RL alignment (CISPO-style)](#62-rl-alignment-cispo-style)
 - [7. Citation](#7-citation)
-
+- [8. License](#8-license)
 ---
 
 ## 1. Repository Layout
@@ -257,4 +260,7 @@ If you use this codebase, please cite the corresponding paper (to be filled):
   journal   = {arXiv},
   year      = {2026}
 }
-```
+
+## 8. License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
