@@ -5,6 +5,13 @@ auditable medical-image evidence experiments. The reinforcement-learning stage
 trains a small MLP over precomputed probabilities and localization features;
 it does not update the foundation model or the visual verifier.
 
+## Paper figure
+
+The original manuscript figure is included at
+[`docs/assets/abstract_figure.png`](docs/assets/abstract_figure.png). It is
+provided as historical context; its Claim/Probe/Stop labels describe the
+earlier paper notation and are not the exact three-action API implemented here.
+
 The reference hardware profile is Ascend 910B/910C NPU with up to eight cards.
 The same policy code also runs on CPU for deterministic synthetic regression.
 Set `IIRA2_DEVICE=cpu`, `cuda`, or `npu`; with `auto` the runtime selects an
