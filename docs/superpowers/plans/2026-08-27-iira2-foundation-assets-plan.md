@@ -4,7 +4,7 @@
 
 **Goal:** Build the installable repository, validated configuration surface, compact run-status protocol, resumable asset manager, environment probe, and restricted-safe offline bundler.
 
-**Architecture:** Keep code in `D:\trustModel\iira2` and all large assets under sibling directories in `D:\trustModel`. Pure dataclasses and filesystem services form the host-testable core; Hugging Face, NPU, and dataset-specific work consumes their manifests later. Every command produces a compact `STATUS.json` before expensive work begins.
+**Architecture:** Keep code in `${IIRA2_ROOT}\iira2` and all large assets under sibling directories in `${IIRA2_ROOT}`. Pure dataclasses and filesystem services form the host-testable core; Hugging Face, NPU, and dataset-specific work consumes their manifests later. Every command produces a compact `STATUS.json` before expensive work begins.
 
 **Tech Stack:** Python 3.11, `dataclasses`, `pathlib`, `hashlib`, OmegaConf/Hydra, PyYAML, Hugging Face Hub, pytest, PowerShell, JSON/HTML.
 
@@ -13,7 +13,7 @@
 ## Global Constraints
 
 - The old `IIRA-main.zip` is reference-only and must never be imported.
-- Code lives in `D:\trustModel\iira2`; models, datasets, wheelhouse, downloads, manifests, and bundles live under `D:\trustModel`.
+- Code lives in `${IIRA2_ROOT}\iira2`; models, datasets, wheelhouse, downloads, manifests, and bundles live under `${IIRA2_ROOT}`.
 - P0 runs use at most 7 Ascend 910C NPUs; no CUDA, `bitsandbytes`, CUDA flash-attn, or ordinary vLLM dependency is allowed in the core path.
 - Main Qwen model is `Qwen/Qwen3.8-27B` at revision `1d4bf0f2ff6012fd82039f2fa52739d0dd7c60c0`.
 - KBCSv2 backbone is `microsoft/rad-dino` at revision `110cbc18d5133582e320b43d53bf5c44e410c936`.
@@ -90,7 +90,7 @@ class ProjectPaths:
 
     @classmethod
     def discover(cls) -> "ProjectPaths":
-        return cls.from_root(Path(os.environ.get("IIRA2_ROOT", r"D:\trustModel")))
+        return cls.from_root(Path(os.environ.get("IIRA2_ROOT", r"${IIRA2_ROOT}")))
 ```
 
 Set `requires-python = ">=3.11,<3.12"`, setuptools package discovery under `src`, and a `dev` extra containing pytest. Ignore `.venv/`, caches, `outputs/`, and every sibling large-asset directory without ignoring `manifests/` inside the code repository.
@@ -320,7 +320,7 @@ The initial manifest contains exact model IDs/revisions plus the four dataset ve
 
 - [ ] **Step 4: Generate and test the Markdown storage plan**
 
-Run: `python -m iira2.cli.assets storage-plan --root D:\trustModel`
+Run: `python -m iira2.cli.assets storage-plan --root ${IIRA2_ROOT}`
 
 Expected: `docs/STORAGE_PLAN.md` lists each asset, size evidence, subtotal, 20% headroom, free space, and `INCOMPLETE_ESTIMATE` when any official size is unknown.
 
@@ -381,7 +381,7 @@ For model snapshots, call `snapshot_download(repo_id=..., revision=..., local_di
 
 - [ ] **Step 4: Add model manifest and CLI tests with mocked Hub calls**
 
-Assert exact repo IDs and revisions, `local_dir` under `D:\trustModel\models`, no token in serialized status, deterministic hash ordering, and no `VERIFIED` state until offline file validation succeeds.
+Assert exact repo IDs and revisions, `local_dir` under `${IIRA2_ROOT}\models`, no token in serialized status, deterministic hash ordering, and no `VERIFIED` state until offline file validation succeeds.
 
 - [ ] **Step 5: Run the complete asset test set**
 
@@ -411,7 +411,7 @@ git commit -m "feat: add resumable verified asset downloads"
 - Test: `tests/runtime/test_compatibility.py`
 
 **Interfaces:**
-- Consumes: host subprocess outputs and, in target container, `torch_npu` runtime APIs.
+- Consumes: host subprocess outputs and, in target runtime, `torch_npu` runtime APIs.
 - Produces: `EnvironmentProbe`, `CompatibilityDecision`, and `probe_environment() -> EnvironmentProbe`.
 
 - [ ] **Step 1: Write failing probe normalization tests**
@@ -432,7 +432,7 @@ Expected: FAIL because runtime probe modules do not exist.
 
 - [ ] **Step 3: Implement non-throwing environment discovery**
 
-Capture OS, architecture, Python, disk, container markers, image digest when available, `torch`, `torch_npu`, CANN, driver, firmware, NPU names/count/memory, and HCCL. Missing commands become explicit `null` plus warning, never fabricated values. A compatibility decision remains `UNRESOLVED` until exact Python/CANN/torch/torch_npu versions are observed.
+Capture OS, architecture, Python, disk, runtime markers, image digest when available, `torch`, `torch_npu`, CANN, driver, firmware, NPU names/count/memory, and HCCL. Missing commands become explicit `null` plus warning, never fabricated values. A compatibility decision remains `UNRESOLVED` until exact Python/CANN/torch/torch_npu versions are observed.
 
 - [ ] **Step 4: Implement wheelhouse lock generation gate**
 
@@ -442,7 +442,7 @@ The CLI must refuse to render `requirements/npu.lock` from the template until a 
 
 Run: `python -m pytest tests/runtime -v`
 
-Run: `python -m iira2.cli.probe --output D:\trustModel\manifests\host_environment.json`
+Run: `python -m iira2.cli.probe --output ${IIRA2_ROOT}\manifests\host_environment.json`
 
 Expected: tests PASS; current machine is truthfully reported without being labeled NPU ready.
 
@@ -520,19 +520,19 @@ git commit -m "feat: build restricted-safe offline bundles"
 - Test: `tests/architecture/test_legacy_archive_safety.py`
 
 **Interfaces:**
-- Consumes: `D:\trustModel\IIRA-main.zip`, manuscript/thesis source material, and new `src/iira2` AST.
+- Consumes: `${IIRA2_ROOT}\IIRA-main.zip`, manuscript/thesis source material, and new `src/iira2` AST.
 - Produces: a read-only behavior/formula audit and `audit_legacy_boundary(source_root, archive_path) -> LegacyBoundaryAudit`.
 
 - [ ] **Step 1: Write failing no-import and archive-safety tests**
 
 ```python
 def test_new_source_does_not_import_legacy_modules() -> None:
-    audit = audit_legacy_boundary(Path("src/iira2"), Path(r"D:\trustModel\IIRA-main.zip"))
+    audit = audit_legacy_boundary(Path("src/iira2"), Path(r"${IIRA2_ROOT}\IIRA-main.zip"))
     assert audit.forbidden_imports == ()
 
 
 def test_legacy_archive_members_are_safe_paths() -> None:
-    audit = inspect_archive_members(Path(r"D:\trustModel\IIRA-main.zip"))
+    audit = inspect_archive_members(Path(r"${IIRA2_ROOT}\IIRA-main.zip"))
     assert audit.path_traversal_members == ()
 ```
 
@@ -571,7 +571,7 @@ git commit -m "docs: audit legacy behavior without importing it"
 
 **Interfaces:**
 - Consumes: all prior foundation commands.
-- Produces: a committed-code checkpoint plus external asset state under `D:\trustModel`.
+- Produces: a committed-code checkpoint plus external asset state under `${IIRA2_ROOT}`.
 
 - [ ] **Step 1: Run the full host suite**
 
@@ -581,23 +581,23 @@ Expected: all host tests PASS; target-only NPU tests are explicitly skipped with
 
 - [ ] **Step 2: Generate current storage and environment evidence**
 
-Run: `python -m iira2.cli.assets storage-plan --root D:\trustModel`
+Run: `python -m iira2.cli.assets storage-plan --root ${IIRA2_ROOT}`
 
-Run: `python -m iira2.cli.probe --output D:\trustModel\manifests\host_environment.json`
+Run: `python -m iira2.cli.probe --output ${IIRA2_ROOT}\manifests\host_environment.json`
 
 Expected: both files contain measured values and unresolved fields are explicit.
 
 - [ ] **Step 3: Download unrestricted model snapshots in declared order**
 
-Run: `python -m iira2.cli.assets download --asset rad-dino --root D:\trustModel`
+Run: `python -m iira2.cli.assets download --asset rad-dino --root ${IIRA2_ROOT}`
 
-Run: `python -m iira2.cli.assets download --asset qwen3.8-27b --root D:\trustModel`
+Run: `python -m iira2.cli.assets download --asset qwen3.8-27b --root ${IIRA2_ROOT}`
 
 Expected: each command ends in `VERIFIED`, `PARTIAL`, or `FAILED` with compact evidence; never start Qwen when the storage plan lacks 20% headroom.
 
 - [ ] **Step 4: Re-run offline file verification**
 
-Run: `python -m iira2.cli.assets verify --all --local-files-only --root D:\trustModel`
+Run: `python -m iira2.cli.assets verify --all --local-files-only --root ${IIRA2_ROOT}`
 
 Expected: downloaded snapshots have exact revisions and deterministic file hashes. This does not claim model inference readiness.
 

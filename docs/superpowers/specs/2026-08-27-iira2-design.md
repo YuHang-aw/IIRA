@@ -39,10 +39,10 @@ IIRA 2.0 从零实现，不增量修补旧 IIRA。旧代码与旧论文只用于
 
 ## 2. 目录与资产边界
 
-所有项目资产位于 `D:\trustModel`，代码和大文件分离：
+所有项目资产位于 `${IIRA2_ROOT}`，代码和大文件分离：
 
 ```text
-D:\trustModel\
+${IIRA2_ROOT}\
 ├── iira2\                         # 新 Git 仓库，只含代码、配置、小型测试夹具和文档
 ├── models\
 │   ├── qwen3.8-27b\
@@ -55,8 +55,8 @@ D:\trustModel\
 │   │   ├── vindr-cxr-1.0.0\
 │   │   └── mimic-cxr-ext-ils-1.0.0\
 │   └── derived\
-├── wheelhouse\                    # 按目标容器 OS/架构/Python/CANN 固定
-├── offline_bundle\                # 可复制进无网容器的非受限资产
+├── wheelhouse\                    # 按目标Ascend 运行环境 OS/架构/Python/CANN 固定
+├── offline_bundle\                # 可复制进无网Ascend 运行环境的非受限资产
 ├── downloads\                     # .partial、断点和下载状态
 ├── manifests\                     # 全局 SHA256、许可、revision 和状态
 ├── IIRA-main.zip                  # 旧代码，仅参考
@@ -289,7 +289,7 @@ class ExternalEvidence:
 
 ## 7. 数据与标签
 
-受限数据由用户通过官方账号下载到 `D:\trustModel\datasets\restricted`。代码提供官方 URL 清单、断点续传命令、凭据读取方式、目录检查、哈希和状态报告，但不保存凭据、不绕过条款、不使用第三方镜像。
+受限数据由用户通过官方账号下载到 `${IIRA2_ROOT}\datasets\restricted`。代码提供官方 URL 清单、断点续传命令、凭据读取方式、目录检查、哈希和状态报告，但不保存凭据、不绕过条款、不使用第三方镜像。
 
 数据优先级：
 
@@ -519,7 +519,7 @@ Qwen wrong / KBCSv2 wrong
 
 ### Gate 0：目标环境
 
-- 目标容器生成完整环境 JSON；
+- 目标Ascend 运行环境生成完整环境 JSON；
 - Qwen 和 RAD-DINO 均 `local_files_only` 加载；
 - 单图 inference 无隐藏网络调用；
 - 1 次 controller backward/update 有限且非零；
@@ -559,7 +559,7 @@ Qwen wrong / KBCSv2 wrong
 
 ## 16. Ascend 910C 适配
 
-目标环境必须由容器内 probe 实测，不从 GPU/CUDA 环境推断。Probe 输出：
+目标环境必须由Ascend 运行环境内 probe 实测，不从 GPU/CUDA 环境推断。Probe 输出：
 
 ```text
 OS / CPU architecture / Python
@@ -569,7 +569,7 @@ CANN
 torch / torch_npu
 HCCL
 available storage
-container image digest
+runtime image digest
 ```
 
 核心依赖：
@@ -603,13 +603,13 @@ max_7npu: 仅用于经 HCCL/分片验证的扩展实验
 
 下载顺序：
 
-1. 检查 `D:\trustModel` 可用空间并生成 storage plan；
+1. 检查 `${IIRA2_ROOT}` 可用空间并生成 storage plan；
 2. 下载 RAD-DINO 完整 snapshot；
 3. 下载 Qwen3.8-27B 完整 snapshot；
 4. 用户下载 credentialed datasets；
-5. 根据目标容器 probe 构建 wheelhouse；
+5. 根据目标Ascend 运行环境 probe 构建 wheelhouse；
 6. 生成非受限 offline bundle；
-7. 在 network-disabled 目标容器验证。
+7. 在 network-disabled 目标Ascend 运行环境验证。
 
 每个资产使用状态：
 
@@ -716,13 +716,13 @@ CLI 允许 `key=value` 覆盖，但必须保存合并后的 resolved config、co
 - stress 配置进入 clean 主结果；
 - 请求不存在的算法、数据源或静默 fallback。
 
-为便于无网容器内外交流，默认终端不打印逐样本 prediction、trajectory、自由文本生成或完整依赖列表，只打印固定顺序的关键指标行。每次运行生成：
+为便于无网Ascend 运行环境内外交流，默认终端不打印逐样本 prediction、trajectory、自由文本生成或完整依赖列表，只打印固定顺序的关键指标行。每次运行生成：
 
 ```text
 outputs/<run_id>/STATUS.json       # 机器可读，单个紧凑对象
 outputs/<run_id>/REPORT.html       # 单屏优先，可展开但默认只显示关键指标
 outputs/<run_id>/REPORT.png        # 适合直接截图
-outputs/<run_id>/internal/         # 容器内完整审计产物，不进入紧凑交换输出
+outputs/<run_id>/internal/         # Ascend 运行环境内完整审计产物，不进入紧凑交换输出
 ```
 
 `STATUS.json` 使用版本化 schema，顶层只保留：
@@ -752,7 +752,7 @@ Runtime: samples_per_second, peak_npu_memory_gib
 
 ## 19. 离线验收
 
-目标容器设置：
+目标Ascend 运行环境设置：
 
 ```text
 HF_HUB_OFFLINE=1
@@ -776,7 +776,7 @@ HF_DATASETS_OFFLINE=1
 - bootstrap evaluation；
 - restricted data archive exclusion test。
 
-容器内输出紧凑的 `STATUS.json`、`REPORT.html` 和 `REPORT.png`，便于无法传出文件时截图。成功、部分、缺失、阻塞必须分开显示。
+Ascend 运行环境内输出紧凑的 `STATUS.json`、`REPORT.html` 和 `REPORT.png`，便于无法传出文件时截图。成功、部分、缺失、阻塞必须分开显示。
 
 ## 20. 测试
 
@@ -854,7 +854,7 @@ OFFLINE_READY
 BLOCKED
 ```
 
-只有真实 Ascend 910C 容器中的无网测试通过后，才能标记 `OFFLINE_READY`。本地静态测试、CUDA 测试或仅下载成功均不能替代该状态。
+只有真实 Ascend 910C Ascend 运行环境中的无网测试通过后，才能标记 `OFFLINE_READY`。本地静态测试、CUDA 测试或仅下载成功均不能替代该状态。
 
 出现阻塞时必须记录：
 
@@ -870,7 +870,7 @@ evidence_path
 ## 23. 已冻结决策
 
 - 新代码完全重写，旧代码只作为参考；
-- 所有数据和资产位于 `D:\trustModel`；
+- 所有数据和资产位于 `${IIRA2_ROOT}`；
 - Qwen3.8-27B 是主模型，主实验冻结；
 - 后续允许 Qwen 微调作为对照；
 - RAD-DINO KBCSv2 是独立医学视觉 sensor；
@@ -880,5 +880,5 @@ evidence_path
 - 目标平台是 Ascend 910C，最多使用 7 张 NPU；
 - restricted data 由用户通过官方渠道下载；
 - 所有实验走统一配置开关，非法组合失败而不是静默 fallback；
-- 终端和交换报告只显示关键指标，完整审计结果保留在容器内部；
+- 终端和交换报告只显示关键指标，完整审计结果保留在Ascend 运行环境内部；
 - 正式大规模训练服从 Go/No-Go gates。

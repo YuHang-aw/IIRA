@@ -59,7 +59,7 @@ ProjectPaths + ResolvedConfig + RunSummary
 ## Stop Conditions
 
 - Do not start large Qwen download without storage plan plus 20% headroom.
-- Do not build an NPU wheelhouse before the target container probe resolves exact compatibility.
+- Do not build an NPU wheelhouse before the target runtime probe resolves exact compatibility.
 - Do not train KBCSv2 when required authorized data is absent.
 - Do not generate evidence or revision caches before the KBCSv2 freeze seal.
 - Do not run large Macro-CISPO after a failed complementarity gate.

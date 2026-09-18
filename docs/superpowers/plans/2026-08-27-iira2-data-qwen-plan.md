@@ -4,7 +4,7 @@
 
 **Goal:** Implement compliant dataset intake, canonical pathology records, leakage audits, deterministic image preprocessing, the official frozen Qwen3.8 adapter, constrained probability scoring, and replayable response caches.
 
-**Architecture:** Dataset adapters normalize metadata into immutable internal records while preserving source-specific identifiers only inside the container. The Qwen adapter depends on a small multimodal-agent protocol and injects model/processor objects for host tests; production loads the pinned local snapshot only. Direct and evidence-conditioned responses are cached separately and content-addressed.
+**Architecture:** Dataset adapters normalize metadata into immutable internal records while preserving source-specific identifiers only inside the runtime. The Qwen adapter depends on a small multimodal-agent protocol and injects model/processor objects for host tests; production loads the pinned local snapshot only. Direct and evidence-conditioned responses are cached separately and content-addressed.
 
 **Tech Stack:** Python 3.11, pandas, PyArrow, pydicom, Pillow, NumPy, scikit-image, Hugging Face Transformers, safetensors, pytest.
 
@@ -13,7 +13,7 @@
 ## Global Constraints
 
 - Execute `2026-08-27-iira2-foundation-assets-plan.md` first.
-- Restricted PhysioNet/Stanford data is downloaded only by the user through official access and stays under `D:\trustModel\datasets\restricted`.
+- Restricted PhysioNet/Stanford data is downloaded only by the user through official access and stays under `${IIRA2_ROOT}\datasets\restricted`.
 - VinDr test is locked against training, calibration, threshold selection, and model selection.
 - MIMIC uses official splits; train/validation/test subject and study overlap must be asserted.
 - The core ontology is exactly eight pathologies from the approved design.
@@ -77,7 +77,7 @@ The PowerShell script prints official URLs, target directories, a resumable offi
 
 Run: `python -m pytest tests/data/test_access_manifest.py -v`
 
-Run: `python -m iira2.cli.data audit --all --root D:\trustModel`
+Run: `python -m iira2.cli.data audit --all --root ${IIRA2_ROOT}`
 
 Expected: tests PASS; unavailable credentialed datasets report `BLOCKED_BY_TERMS` with required user action.
 

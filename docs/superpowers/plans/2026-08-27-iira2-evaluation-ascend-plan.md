@@ -18,7 +18,7 @@
 - Abstention is excluded from covered probability loss but reported through coverage/selective risk; it is never encoded as probability `0.5`.
 - Clean, stress, and intervention outputs are distinct experiment identities and never overwrite each other.
 - The compact exchange report contains only aggregate key metrics and redacted artifact references.
-- Real NPU and offline readiness can only be claimed from the target Ascend 910C container.
+- Real NPU and offline readiness can only be claimed from the target Ascend 910C runtime.
 - Use 2-way feasibility then 4-way Qwen sharding; 7-way is opt-in only after a passing HCCL/device-plan probe.
 - Every implementation task follows red-green-refactor and ends with an isolated commit.
 
@@ -537,13 +537,13 @@ Set `HF_HUB_OFFLINE=1`, `TRANSFORMERS_OFFLINE=1`, and `HF_DATASETS_OFFLINE=1`; i
 
 - [ ] **Step 4: Separate host, NPU, and true network-disabled evidence**
 
-Statuses progress only through `SOURCE_READY`, `ASSETS_VERIFIED`, `HOST_TESTED`, `NPU_SMOKE_PASSED`, and `OFFLINE_READY`. The last state requires execution in a target container launched without network; Python monkeypatches alone are insufficient. Record container image digest and environment hash.
+Statuses progress only through `SOURCE_READY`, `ASSETS_VERIFIED`, `HOST_TESTED`, `NPU_SMOKE_PASSED`, and `OFFLINE_READY`. The last state requires execution in a target runtime launched without network; Python monkeypatches alone are insufficient. Record runtime image digest and environment hash.
 
 - [ ] **Step 5: Run host acceptance tests and target command**
 
 Run: `python -m pytest tests/offline -v`
 
-Run in target network-disabled container: `python -m iira2.cli.verify_offline --config configs/experiment/offline_smoke.yaml`
+Run in target network-disabled runtime: `python -m iira2.cli.verify_offline --config configs/experiment/offline_smoke.yaml`
 
 Expected: host tests PASS. Target command emits all three compact artifacts and only claims `OFFLINE_READY` when every mandatory check passes.
 
